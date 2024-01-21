@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pawn Shop</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 10;
+            padding: 0;
+            box-sizing: border-box;
+            padding-bottom: 80px;
+            background-color:#DEFFEB;
+
+        }
+
+
+        header {
+            background-color: #00A44D;
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+
+
+        }
+
+        nav {
+            background-color:#fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+             top: 60px;
+
+        }
+
+        .menu{
+        position:fixed;
+         z-index: 1000;
+         top: 0;
+         width: 100%;
+
+
+        }
+        .containerBox{
+           padding: 120px;
+        }
+
+        nav a {
+            background-color: #fff;
+            text-decoration: none;
+            color: #9C9C9C;
+            padding: 4px 16px;
+            border: 2px solid #9C9C9C;
+            border-radius: 100px;
+            font-weight: bold;
+
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+        }
+
+         section {
+            padding: 20px;
+        }
+
+
+
+
+        .container-form {
+            margin-top: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-left span {
+            margin-right: 10px;
+        }
+
+
+        .row{
+            margin-bottom: 0.5rem; /* Add space between label and textbox */
+        }
+
+        .form-control {
+            width: 60%; /* Make textboxes fill their container */
+          /*  max-width: 100px;  Set a maximum width for textboxes */
+
+
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            margin-bottom: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #00A44D;
+            margin-bottom: 8px;
+            display: block;
+            margin-bottom: 0.5rem;
+            margin-left: 20px;
+        }
+
+        .form-control:focus {
+            border-color: #00A44D;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .btn-logoff {
+            background-color: #FFFFFF;
+            color: #00A44D;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background-color: #00A44D;
+            color: #FFFFFF;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            background-color: #FFDF11;
+            color: #FFFFFF;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .hideTab{
+        display:none;
+        }
+
+        .textbox {
+            width: 200px; /* Adjust the width as needed */
+            margin-right: 30px;
+            border: 0px solid #ddd;
+            border-radius: 50px;
+            height: 40px;
+        }
+        .textbox:focus {
+            border-color: #00A44D;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .required {
+        color: red;
+    }
+
+
+    </style>
+</head>
+
+<body>
+<!-- Hidden inputs -->
+
+<input type="hidden" id="user" th:value="${adminName}"/>
+
+<div class="menu">
+    <header>
+        <h2>My Pawn Shop</h2>
+        <div class="header-left">
+            <span>Hi, </span>
+            <span id="adminName"></span>
+            <button type="button" onclick="logOff()" class="btn btn-logoff">Log Out</button>
+        </div>
+    </header>
+
+    <nav>
+        <a  th:href="@{/pawnshop/lend(admin=${adminName})}" id="lend" onclick="triggerFunction('content1','lend')">Lend</a>
+        <a  th:href="@{/pawnshop/return(admin=${adminName})}" id="return" onclick="triggerFunction('content2','return')">Return</a>
+        <a  th:href="@{/pawnshop/viewRecord(admin=${adminName})}"  id="view" onclick="triggerFunction('content3','view')">View Record</a>
+        <a style="color: #00A44D;" th:href="@{/pawnshop/dailyReport(admin=${adminName})}"   id="report" onclick="triggerFunction('content4','report')">Daily Report</a>
+        <a  th:href="@{/pawnshop/search(admin=${adminName})}"  id="search" onclick="triggerFunction('content5','search')">Search</a>
+        <!--<a  th:href="@{/pawnshop/calculateInterest(admin=${adminName})}" id="interest" onclick="triggerFunction('content6','interest')">Calculate Interest</a>-->
+    </nav>
+</div>
+
+<div class="containerBox">
+    <section id="content1">
+
+        <br>
+        <p>Please choose the below options to generate report : </p>
+        <input type="radio" id="daily" name="dailyReport" value="dailyReport" onclick="displayTab('daily')">
+        <label for="daily">Generate Daily Report</label><br><br>
+
+        <input type="radio" id="timeLine" name="timeLineReport" value="timeLineReport" onclick="displayTab('timeLine')">
+        <label for="timeLine">Generate Time Based Report</label><br><br>
+
+        <input type="radio" id="custom" name="customReport" value="customReport" onclick="displayTab('custom')">
+        <label for="custom">Generate Custom Data Based Report</label><br>
+
+        <br><br><br>
+
+        <div id="dailyReportSection" class="hideTab">
+
+            <button  type="submit" class="btn btn-submit"  onclick="generateReport('daily')" style="margin-right: 20px;">Generate Daily Report</button>
+        </div>
+        <div id="timeLineBasedSection" class="hideTab">
+            <label for="startDate" class="text-label">Enter Start Date ::<span class="required">*</span></label>
+            <input type="date"  id="startDate"  class="textbox"/>
+            <label for="endDate" class="text-label">Enter End Date ::<span class="required">*</span></label>
+            <input type="date"  id="endDate"  class="textbox"/>
+            <br><br><br>
+            <button  type="submit" class="btn btn-submit"  onclick="generateReport('time')" style="margin-right: 20px;">Generate TimeLine Report</button>
+
+        </div>
+        <div id="customDataBasedSection" class="hideTab">
+            <label for="customInput" class="form-label">Choose Report Type<span class="required">*</span></label>
+            <select id="customInput" class="textbox" >
+                <option value="parameter">Select Parameter for Report...</option>
+                <option value="name">Name</option>
+                <option value="place">Place</option>
+                <option value="requestedDate">Requested Date</option>
+                <option value="returnedDate">Returned Date</option>
+                <option value="materialNature">Material Nature</option>
+                <option value="materialType">Material Type</option>
+            </select>
+
+            <br><br>
+
+            <div id="nameInput" class="hidden">
+                <label for="name">Name:<span class="required">*</span></label>
+                <input type="text" id="name" name="name">
+            </div>
+
+            <div id="placeInput" class="hidden">
+                <label for="place">Place:<span class="required">*</span></label>
+                <input type="text" id="place" name="place">
+            </div>
+
+            <div id="requestedDateInput" class="hidden">
+                <label for="requestedDate">Requested Date:<span class="required">*</span></label>
+                <input type="date" id="requestedDate" name="requestedDate">
+            </div>
+
+            <div id="returnedDateInput" class="hidden">
+                <label for="returnedDate">Returned Date:<span class="required">*</span></label>
+                <input type="date" id="returnedDate" name="returnedDate">
+            </div>
+
+            <div id="materialNatureInput" class="hidden">
+                <label for="materialNature">Material Nature:<span class="required">*</span></label>
+                <select id="materialNature" class="textbox" >
+                    <option value="gold">Gold</option>
+                    <option value="silver">Silver</option>
+                    <option value="others">Others</option>
+                </select>
+            </div>
+
+            <div id="materialTypeInput" class="hidden">
+                <label for="materialType">Material Type:<span class="required">*</span></label>
+                <select id="materialType" class="textbox" >
+                    <option value="ring">Ring</option>
+                    <option value="chain">Chain</option>
+                    <option value="anklet">Anklet</option>
+                    <option value="earrings">Earrings</option>
+                    <option value="others">Others</option>
+                </select>
+            </div>
+            <br><br>
+            <button  type="submit" class="btn btn-submit"  onclick="generateReport('custom')" style="margin-right: 20px;">Generate Custom Report</button>
+        </div>
+
+    </section>
+</div>
+
+<script>
+
+    function logOff(){
+    var url = window.location.origin;
+    window.location.href=url+'/pawnshop';
+    }
+
+    var adminName= document.getElementById("user").value;
+    document.getElementById('adminName').textContent = adminName;
+
+    //radio button reset
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var radioButtons = document.querySelectorAll('input[type="radio"]');
+
+      radioButtons.forEach(function(radioButton) {
+        radioButton.addEventListener('change', function() {
+          // Uncheck other radio buttons
+          radioButtons.forEach(function(otherRadioButton) {
+            if (otherRadioButton !== radioButton) {
+              otherRadioButton.checked = false;
+            }
+          });
+        });
+      });
+    });
+
+
+    function displayTab(reportType){
+        var dailyTab = document.getElementById('dailyReportSection');
+        var timeLineBasedTab = document.getElementById('timeLineBasedSection');
+        var customBasedTab = document.getElementById('customDataBasedSection');
+        console.log(reportType);
+        if(reportType=='daily'){
+
+
+
+
+            dailyTab.style.display='block';
+            timeLineBasedTab.style.display='none';
+            customBasedTab.style.display='none';
+        }else if(reportType=='timeLine'){
+
+            dailyTab.style.display='none';
+            timeLineBasedTab.style.display='block';
+            customBasedTab.style.display='none';
+        }else if(reportType=='custom'){
+            dailyTab.style.display='none';
+            timeLineBasedTab.style.display='none';
+            customBasedTab.style.display='block';
+        }
+    }
+
+    var parameterType;
+    $(document).ready(function() {
+
+            $('#customInput').change(function() {
+                var selectedValue = $(this).val();
+                parameterType = $(this).val();
+                // Hide all input boxes
+                $('#nameInput, #placeInput, #requestedDateInput, #returnedDateInput, #materialNatureInput, #materialTypeInput').addClass('hidden');
+
+                // Show the selected input box
+                $('#' + selectedValue + 'Input').removeClass('hidden');
+            });
+        });
+
+ function alertError(msg) {
+  Swal.fire({
+    title: 'Alert',
+    text: msg,
+    icon: 'error',
+    confirmButtonText: 'OK'
+  });
+}
+
+    function generateReport(reportType){
+
+    if(reportType==='daily'){
+        var baseUrl = window.location.origin;
+        var url = baseUrl + '/pawnshop/generateDailyReport';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+            },
+            responseType: 'blob'
+        })
+        .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+        var contentDisposition = response.headers.get('Content-Disposition');
+        var filenameMatch = contentDisposition && contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        var filename = filenameMatch ? filenameMatch[1] : 'downloaded-file.xlsx';
+
+        return response.blob().then(blob => ({ blob, filename }));
+
+        })
+         .then(({blob,filename}) => {
+             console.log("inside blob "+filename);
+             var blobUrl = window.URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+             window.URL.revokeObjectURL(blobUrl);
+
+        })
+        .catch(error => {
+         console.error('Error:', error);
+         });
+    }else if(reportType==='time'){
+        var startDate =document.getElementById('startDate').value;
+        var endDate =document.getElementById('endDate').value;
+        console.log(startDate);
+        console.log(endDate);
+
+        if(!startDate=='' && !endDate==''){
+        var baseUrl = window.location.origin;
+        var url = baseUrl + '/pawnshop/generateTimeBasedReport';
+        url += '?startDate=' + startDate + '&endDate=' + endDate;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+            },
+
+            responseType: 'blob'
+        })
+        .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+        var contentDisposition = response.headers.get('Content-Disposition');
+        var filenameMatch = contentDisposition && contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        var filename = filenameMatch ? filenameMatch[1] : 'downloaded-file.xlsx';
+
+        return response.blob().then(blob => ({ blob, filename }));
+
+        })
+         .then(({blob,filename}) => {
+             console.log("inside blob "+filename);
+             var blobUrl = window.URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+             window.URL.revokeObjectURL(blobUrl);
+
+        })
+        .catch(error => {
+         console.error('Error:', error);
+         });
+
+     }else{
+     if(startDate==='' && endDate===''){
+        alertError('Enter startDate and EndDate');
+     }else if(startDate===''){
+        alertError('Enter startDate');
+     }else{
+        alertError('Enter endDate');
+     }
+     }
+
+    }else if(reportType==='custom'){
+        var name =document.getElementById('name').value;
+        var place =document.getElementById('place').value;
+        var    requestedDate =document.getElementById('requestedDate').value;
+        var    returnedDate =document.getElementById('returnedDate').value;
+        var    materialNature =document.getElementById('materialNature').value;
+        var    materialType =document.getElementById('materialType').value;
+        console.log(parameterType);
+        var validation=true;
+        if(parameterType==='parameter' || parameterType===undefined){
+            alertError('Choose a parameter to generate Report');
+            validation=false;
+        }else if(parameterType==='name'){
+            if(name===''){
+                alertError('Enter Name to proceed');
+                validation=false;
+            }
+        }else if(parameterType==='place'){
+            if(place===''){
+                alertError('Enter Place to proceed');
+                validation=false;
+            }
+        }else if(parameterType==='requestedDate'){
+            if(requestedDate===''){
+                alertError('Enter RequestedDate to proceed');
+                validation=false;
+            }
+        }else if(parameterType==='returnedDate'){
+            if(returnedDate===''){
+                alertError('Enter ReturnedDate to proceed');
+                validation=false;
+            }
+        }else if(parameterType==='materialNature'){
+            if(materialNature===''){
+                alertError('Enter MaterialNature to proceed');
+                validation=false;
+            }
+        }else if(parameterType==='materialType'){
+            if(materialType===''){
+                alertError('Enter MaterialType to proceed');
+                validation=false;
+            }
+        }
+
+        if(validation){
+        var baseUrl = window.location.origin;
+        var url = baseUrl + '/pawnshop/generateCustomReport';
+        url += '?name=' + name + '&place=' + place+ '&requestedDate=' + requestedDate+ '&returnedDate=' + returnedDate+ '&materialNature=' + materialNature+ '&materialType=' + materialType+'&parameterType='+parameterType;
+        fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+            },
+            responseType: 'blob'
+        })
+        .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+        var contentDisposition = response.headers.get('Content-Disposition');
+        var filenameMatch = contentDisposition && contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        var filename = filenameMatch ? filenameMatch[1] : 'downloaded-file.xlsx';
+
+        return response.blob().then(blob => ({ blob, filename }));
+
+        })
+         .then(({blob,filename}) => {
+             console.log("inside blob "+filename);
+             var blobUrl = window.URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+             window.URL.revokeObjectURL(blobUrl);
+
+        })
+        .catch(error => {
+         console.error('Error:', error);
+         });
+
+    }
+    }
+    }
+
+</script>
+</body>
+<footer>
+    &copy; My Pawn Shop ,Anna Nagar ,Chennai  600028. All rights reserved.
+</footer>
+</html>
+

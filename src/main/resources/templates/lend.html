@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pawn Shop</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 10;
+            padding: 0;
+            box-sizing: border-box;
+            padding-bottom: 80px;
+            background-color:#DEFFEB;
+
+        }
+
+
+        header {
+            background-color: #00A44D;
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+
+
+        }
+
+        nav {
+            background-color:#fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+             top: 60px;
+
+        }
+
+        .menu{
+        position:fixed;
+         z-index: 1000;
+         top: 0;
+         width: 100%;
+
+
+        }
+        .containerBox{
+           padding: 120px;
+        }
+
+        nav a {
+            background-color: #fff;
+            text-decoration: none;
+            color: #9C9C9C;
+            padding: 4px 16px;
+            border: 2px solid #9C9C9C;
+            border-radius: 100px;
+            font-weight: bold;
+
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+        }
+
+
+
+         section {
+            padding: 20px;
+        }
+
+        .container-form {
+            margin-top: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-left span {
+            margin-right: 10px;
+        }
+
+
+        .row{
+            margin-bottom: 0.5rem; /* Add space between label and textbox */
+        }
+
+        .form-control {
+            width: 60%; /* Make textboxes fill their container */
+          /*  max-width: 100px;  Set a maximum width for textboxes */
+
+
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            margin-bottom: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #00A44D;
+            margin-bottom: 8px;
+            display: block;
+            margin-bottom: 0.5rem;
+            margin-left: 20px;
+        }
+
+        .form-control:focus {
+            border-color: #00A44D;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .btn-logoff {
+            background-color: #FFFFFF;
+            color: #00A44D;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background-color: #00A44D;
+            color: #FFFFFF;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            background-color: #FFDF11;
+            color: #FFFFFF;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+       .required {
+        color: red;
+    }
+
+
+
+    </style>
+</head>
+
+<body>
+<!-- Hidden inputs -->
+
+<input type="hidden" id="user" th:value="${adminName}"/>
+<input type="hidden" id="trackId" th:value="${trackingId}"/>
+
+
+<div class="menu">
+    <header>
+        <h2>My Pawn Shop</h2>
+        <div class="header-left">
+            <span>Hi, </span>
+            <span id="adminName"></span>
+            <button type="button" onclick="logOff()" class="btn btn-logoff">Log Out</button>
+        </div>
+    </header>
+
+    <nav>
+        <a style="color: #00A44D;" th:href="@{/pawnshop/lend(admin=${adminName})}" id="lend" onclick="triggerFunction('content1','lend')">Lend</a>
+        <a  th:href="@{/pawnshop/return(admin=${adminName})}" id="return" onclick="triggerFunction('content2','return')">Return</a>
+        <a  th:href="@{/pawnshop/viewRecord(admin=${adminName})}"  id="view" onclick="triggerFunction('content3','view')">View Record</a>
+        <a  th:href="@{/pawnshop/dailyReport(admin=${adminName})}"   id="report" onclick="triggerFunction('content4','report')">Daily Report</a>
+        <a  th:href="@{/pawnshop/search(admin=${adminName})}"  id="search" onclick="triggerFunction('content5','search')">Search</a>
+        <!--<a  th:href="@{/pawnshop/calculateInterest(admin=${adminName})}" id="interest" onclick="triggerFunction('content6','interest')">Calculate Interest</a>-->
+    </nav>
+</div>
+
+<div class="containerBox">
+    <section id="content1">
+        <div class="container container-form">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="id" class="form-label">ID</label>
+                    <input type="text" class="form-control" id="id" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Name<span class="required">*</span></label>
+                    <input type="text" class="form-control" id="name"  >
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="parentName" class="form-label">Father/Mother Name<span class="required">*</span></label>
+                    <input type="text" class="form-control" id="parentName" >
+                </div>
+                <div class="col-md-6">
+                    <label for="place" class="form-label">Place<span class="required">*</span></label>
+                    <input type="text" class="form-control" id="place"  >
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="materialNature" class="form-label">Material Nature<span class="required">*</span></label>
+                    <select id="materialNature" class="form-control">
+                        <option value="gold">Gold</option>
+                        <option value="silver">Silver</option>
+                        <option value="others">Others</option>
+                    </select>
+
+                </div>
+                <div class="col-md-6">
+                    <label for="materialType" class="form-label">Material Type<span class="required">*</span></label>
+                    <select id="materialType" class="form-control">
+                        <option value="ring">Ring</option>
+                        <option value="chain">Chain</option>
+                        <option value="anklet">Anklet</option>
+                        <option value="earrings">Earrings</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="weight" class="form-label">Weight (in grams)<span class="required">*</span></label>
+                    <input type="text" class="form-control" id="weight" >
+                </div>
+                <div class="col-md-6">
+                    <label for="amountGiven" class="form-label">Amount Given<span class="required">*</span></label>
+                    <input type="text" class="form-control" id="amountGiven" >
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="materialMarketValue" class="form-label">Material Market Value</label>
+                    <input type="text" class="form-control" id="materialMarketValue" >
+                </div>
+                <div class="col-md-6">
+                    <label for="datebox" class="form-label">Date<span class="required">*</span></label>
+                    <input type="date" class="form-control" id="datebox">
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="phone" >
+                </div>
+                <div class="col-md-6">
+                    <label for="comments" class="form-label">Comments</label>
+                    <input type="text" class="form-control" id="comments" >
+                </div>
+            </div>
+            <br>
+            <div class="row ">
+                <div class="col-md-12">
+                    <button  type="submit" class="btn btn-submit"  onclick="insertData()" style="margin-right: 20px;">Submit</button>
+                    <button  type="button" onclick="reset()" class="btn btn-reset"  style="margin-right: 20px;">Reset</button>
+                    <button  type="button" onclick="reset()" class="btn btn-cancel"  style="margin-right: 20px;">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+</div>
+
+<script>
+
+    //get Tracking Id
+
+    var trackingIdValue = document.getElementById('trackId').value;
+    document.getElementById('id').value = trackingIdValue;
+
+    function logOff(){
+    var url = window.location.origin;
+    window.location.href=url+'/pawnshop';
+    }
+
+    var adminName= document.getElementById("user").value;
+    document.getElementById('adminName').textContent = adminName;
+
+    // set current date
+      var today = new Date();
+    var options = { timeZone: 'Asia/Kolkata' };
+    var indiaDate = new Date(today.toLocaleDateString('en-GB', options));
+    document.getElementById('datebox').valueAsDate = indiaDate;
+
+    function insertData() {
+
+    if(document.getElementById('name').value=='' ||document.getElementById('parentName').value=='' ||
+    document.getElementById('place').value=='' ||document.getElementById('materialNature').value==''||
+    document.getElementById('materialType').value==''|| document.getElementById('weight').value==''
+    || document.getElementById('amountGiven').value=='' ||document.getElementById('datebox').value==''){
+
+        alertError('Please fill out all mandatory Fields');
+
+    }else{
+    var baseUrl = window.location.origin;
+    var url = baseUrl + '/pawnshop/insertRecord';
+    var data = {
+        trackingId: document.getElementById('trackId').value,
+                name:document.getElementById('name').value,
+                parentName:document.getElementById('parentName').value,
+                place:document.getElementById('place').value,
+                materialNature:document.getElementById('materialNature').value,
+                materialType:document.getElementById('materialType').value,
+                weightInGrams:document.getElementById('weight').value,
+                amountGiven:document.getElementById('amountGiven').value,
+                materialMarketValue:document.getElementById('materialMarketValue').value,
+                phoneNumber:document.getElementById('phone').value,
+                comments:document.getElementById('comments').value,
+                requestedDate:document.getElementById('datebox').value
+    };
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(data),
+         responseType: 'blob'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        var contentDisposition = response.headers.get('Content-Disposition');
+        var filenameMatch = contentDisposition && contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        var filename = filenameMatch ? filenameMatch[1] : 'downloaded-file.pdf';
+
+        return response.blob().then(blob => ({ blob, filename }));
+
+    })
+    .then(({blob,filename}) => {
+        console.log("inside blob "+filename);
+        var blobUrl = window.URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    }
+
+    function alertError(msg) {
+  Swal.fire({
+    title: 'Alert',
+    text: msg,
+    icon: 'error',
+    confirmButtonText: 'OK'
+  });
+}
+}
+</script>
+</body>
+<footer>
+    &copy;  My Pawn Shop ,Anna Nagar ,Chennai  600028. All rights reserved.
+</footer>
+</html>
+

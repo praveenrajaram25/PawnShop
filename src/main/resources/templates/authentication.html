@@ -1,0 +1,143 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>My Pawn Shop</title>
+
+</head>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+<!------------------------------- Add the CCS code here -------------------->
+<style>
+
+    body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    height:350px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+</style>
+
+
+<!------------------------------- Add the JS code here -------------------->
+<script>
+    var baseUrl = window.location.href;
+
+function login(){
+
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+
+    if(username=='' || password==''){
+        if(username=='' && password==''){
+            alertError("Enter UserName and Password");
+        }else if(username==''){
+            alertError("Enter UserName");
+        }else{
+            alertError("Enter Password");
+        }
+    }else{
+        var adminName = document.getElementById("adminName").value;
+        var adminPassword = document.getElementById("adminPassword").value;
+         console.log("db"+adminName +"  "+ adminPassword);
+        var adminUser = equalsIgnoreCase(adminName,username);
+        if(adminUser && password==adminPassword){
+            window.location.href=baseUrl+'/home?admin='+adminName;
+        }else{
+        alertError("Incorrect UserName or Password");
+        }
+
+
+    }
+}
+
+
+function equalsIgnoreCase(str1, str2) {
+        return str1.toLowerCase() === str2.toLowerCase();
+}
+
+
+function alertError(msg) {
+  Swal.fire({
+    title: 'Alert',
+    text: msg,
+    icon: 'error',
+    confirmButtonText: 'OK'
+  });
+}
+
+
+</script>
+
+<!-----------------    Body Content ------------------>
+<body>
+
+<div class="container">
+    <h2>PAWN SHOP APPLICATION</h2>
+    <div class="box">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" onclick="login()">Login</button>
+
+        <input type="hidden" id="adminName" th:value="${adminName}">
+        <input type="hidden" id="adminPassword" th:value="${adminPassword}">
+    </div>
+</div>
+
+</body>
+</html>

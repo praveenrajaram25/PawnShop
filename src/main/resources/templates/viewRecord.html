@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pawn Shop</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 10;
+            padding: 0;
+            box-sizing: border-box;
+            padding-bottom: 80px;
+            background-color:#DEFFEB;
+
+        }
+
+
+        header {
+            background-color: #00A44D;
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+
+
+        }
+
+        nav {
+            background-color:#fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+             top: 60px;
+
+        }
+
+        .menu{
+        position:fixed;
+         z-index: 1000;
+         top: 0;
+         width: 100%;
+
+
+        }
+        .containerBox{
+           padding: 120px;
+        }
+
+        nav a {
+            background-color: #fff;
+            text-decoration: none;
+            color: #9C9C9C;
+            padding: 4px 16px;
+            border: 2px solid #9C9C9C;
+            border-radius: 100px;
+            font-weight: bold;
+
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+        }
+
+
+
+        section {
+            padding: 20px;
+        }
+
+
+
+        .container-form {
+            margin-top: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-left span {
+            margin-right: 10px;
+        }
+
+        .btn-logoff {
+            background-color: #FFFFFF;
+            color: #00A44D;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background-color: #00A44D;
+            color: #FFFFFF;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            background-color: #FFDF11;
+            color: #FFFFFF;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            padding: 5px 20px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .row{
+            margin-bottom: 0.5rem; /* Add space between label and textbox */
+            padding :10px;
+        }
+
+       .form-control {
+
+            padding: 7px;
+            border: 1px solid #ddd;
+            border-radius: 100px;
+            margin-bottom: 5px;
+            box-sizing: border-box;
+            width: 300px;
+        }
+
+        .form-label {
+            margin-right: 10px;
+            color: #00A44D;
+            font-weight: bold;
+        }
+
+        .form-control:focus {
+            border-color: #00A44D;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .trackingId-label {
+            margin-right: 10px;
+            color: #00A44D;
+            font-weight: bold;
+
+
+        }
+        .textbox {
+            width: 200px; /* Adjust the width as needed */
+            border: 1px solid #ddd;
+            border-radius: 100px;
+        }
+
+        .textbox:focus {
+            border-color: #00A44D;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        #dynamicContainer {
+        margin-top: 20px;
+        border: 2px solid #00A44D;;
+        padding: 10px;
+        width: 1300px;
+        height: 450px;
+        border-radius: 10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+<!-- Hidden inputs -->
+
+<input type="hidden" id="user" th:value="${adminName}"/>
+
+<div class="menu">
+    <header>
+        <h2>My Pawn Shop</h2>
+        <div class="header-left">
+            <span>Hi, </span>
+            <span id="adminName"></span>
+            <button type="button" onclick="logOff()" class="btn btn-logoff">Log Out</button>
+        </div>
+    </header>
+
+    <nav>
+        <a  th:href="@{/pawnshop/lend(admin=${adminName})}" id="lend" onclick="triggerFunction('content1','lend')">Lend</a>
+        <a  th:href="@{/pawnshop/return(admin=${adminName})}" id="return" onclick="triggerFunction('content2','return')">Return</a>
+        <a  style="color: #00A44D;"  th:href="@{/pawnshop/viewRecord(admin=${adminName})}"  id="view" onclick="triggerFunction('content3','view')">View Record</a>
+        <a  th:href="@{/pawnshop/dailyReport(admin=${adminName})}"   id="report" onclick="triggerFunction('content4','report')">Daily Report</a>
+        <a  th:href="@{/pawnshop/search(admin=${adminName})}"  id="search" onclick="triggerFunction('content5','search')">Search</a>
+       <!-- <a  th:href="@{/pawnshop/calculateInterest(admin=${adminName})}" id="interest" onclick="triggerFunction('content6','interest')">Calculate Interest</a>-->
+    </nav>
+</div>
+
+<div class="containerBox">
+    <section id="content1">
+        <label for="trackId" class="trackingId-label">Enter Tracking Id ::</label>
+        <input type="text"  id="trackId" oninput="displayCustomerData()" class="textbox"/>
+
+        <div id="dynamicContainer">
+            <div class="row">
+                <div class="col-md-4">
+                    <label  class="form-label">ID :: </label>
+                    <span id="trackingId"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Name ::</label>
+                    <span id="name"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Father/Mother Name ::</label>
+                    <span id="parentName"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label  class="form-label">Place :: </label>
+                    <span id="place"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Material Nature ::</label>
+                    <span id="materialNature"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Material Type::</label>
+                    <span id="materialType"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label  class="form-label">Weight in grams :: </label>
+                    <span id="weightInGrams"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Amount given ::</label>
+                    <span id="amountGiven"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Material market value ::</label>
+                    <span id="materialMarketValue"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label  class="form-label">Material Requested Date :: </label>
+                    <span id="requestedDate"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Phone Number ::</label>
+                    <span id="phoneNumber"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Comments ::</label>
+                    <span id="comments"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label  class="form-label">Returned Date :: </label>
+                    <span id="returnedDate"></span>
+                </div>
+                <div class="col-md-4">
+                    <label  class="form-label">Total Amount Collected :: </label>
+                    <span id="returnAmountCollected"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Interest Amount :: </label>
+                    <span id="interestAmount"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="status" class="form-label">Status :: </label>
+                    <span id="status"></span>
+                </div>
+                <div class="col-md-4">
+                    <label for="result" class="form-label">Result :: </label>
+                    <span id="result"></span>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </section>
+</div>
+
+<script>
+
+    function logOff(){
+    var url = window.location.origin;
+    window.location.href=url+'/pawnshop';
+    }
+
+    var adminName= document.getElementById("user").value;
+    document.getElementById('adminName').textContent = adminName;
+
+
+
+
+    function displayCustomerData(){
+
+       var trackId=document.getElementById("trackId").value;
+        $.ajax({
+            url: '/pawnshop/fetchRecord',
+            method: 'POST',
+            data: { trackId: trackId },
+            success: function(response) {
+            console.log(response);
+              var trackingId = response.trackingId;
+              var name = response.name;
+              var parentName = response.parentName;
+              var place = response.place;
+              var materialNature = response.materialNature;
+              var amountGiven = response.amountGiven;
+              var comments = response.comments;
+              var materialMarketValue = response.materialMarketValue;
+              var materialType = response.materialType;
+              var phoneNumber = response.phoneNumber;
+              var requestedDate = response.requestedDate;
+              var weightInGrams = response.weightInGrams;
+              var returnedDate= response.returnedDate;
+              var amountCollected = response.returnedAmount;
+              var interestAmount = response.interestAmount;
+              var status=response.status;
+              var result=response.result;
+
+
+              document.getElementById('trackingId').textContent = trackingId;
+              document.getElementById('name').textContent = name;
+              document.getElementById('place').textContent = place;
+              document.getElementById('materialNature').textContent = materialNature;
+              document.getElementById('amountGiven').textContent = amountGiven;
+              document.getElementById('comments').textContent = comments;
+              document.getElementById('materialMarketValue').textContent = materialMarketValue;
+              document.getElementById('materialNature').textContent = materialNature;
+              document.getElementById('materialType').textContent = materialType;
+              document.getElementById('phoneNumber').textContent = phoneNumber;
+              document.getElementById('requestedDate').textContent = requestedDate;
+              document.getElementById('weightInGrams').textContent = weightInGrams;
+              document.getElementById('status').textContent = status;
+              document.getElementById('result').textContent = result;
+              document.getElementById('interestAmount').textContent = interestAmount;
+              document.getElementById('returnAmountCollected').textContent = amountCollected;
+              document.getElementById('returnedDate').textContent = returnedDate;
+
+            },
+            error: function(error) {
+              console.error('Error:', error);
+            }
+          })
+    }
+
+
+
+
+
+
+</script>
+
+</body>
+<footer>
+    &copy; My Pawn Shop ,Anna Nagar ,Chennai  600028. All rights reserved.
+</footer>
+</html>
+
