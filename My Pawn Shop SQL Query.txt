@@ -1,0 +1,47 @@
+TABLE 1
+
+
+CREATE TABLE `customer_data` (
+  `tracking_id` int NOT NULL,
+  `NAME` varchar(45) DEFAULT NULL,
+  `PARENT NAME` varchar(45) DEFAULT NULL,
+  `PLACE` varchar(45) DEFAULT NULL,
+  `MATERIAL_NATURE` varchar(45) DEFAULT NULL,
+  `MATERIAL_TYPE` varchar(45) DEFAULT NULL,
+  `WEIGHT_IN_GRAMS` varchar(45) DEFAULT NULL,
+  `amount_given` varchar(255) DEFAULT NULL,
+  `MARKERT_VALUE` int DEFAULT NULL,
+  `REQUESTED_DATE` date DEFAULT NULL,
+  `returned_date` date DEFAULT NULL,
+  `REPORT_STATUS` varchar(5) DEFAULT NULL,
+  `phone_number` varchar(255) DEFAULT NULL,
+  `COMMENTS` varchar(500) DEFAULT NULL,
+  `material_market_value` varchar(255) DEFAULT NULL,
+  `AMOUNT_COLLECTED` varchar(100) DEFAULT NULL,
+  `INTEREST_AMOUNT` varchar(100) DEFAULT NULL,
+  `RECEIPT_NAME` varchar(200) DEFAULT NULL,
+  `STATUS` varchar(50) DEFAULT NULL,
+  `RESULT` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`tracking_id`),
+  UNIQUE KEY `TRACKING_ID_UNIQUE` (`tracking_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
+
+TABLE 2
+
+CREATE TABLE `tracking_number` (
+  `TRACKING_ID` int NOT NULL,
+  PRIMARY KEY (`TRACKING_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+TABLE 3
+
+CREATE TABLE `user` (
+  `ID` int NOT NULL,
+  `USER_NAME` varchar(100) DEFAULT NULL,
+  `PASSWORD` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
